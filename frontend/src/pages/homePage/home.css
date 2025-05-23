@@ -2,3 +2,10 @@
     margin: 0;
     padding: 0;
 }
+
+#search {
+    width: 90%;
+    height: 35px;
+    border: 2px solid rgb(160, 157, 157);
+    border-radius: 20px;
+}

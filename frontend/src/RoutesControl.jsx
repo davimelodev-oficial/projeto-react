@@ -9,7 +9,7 @@ import Sobre from './pages/sobre/Sobre';
 
 
 
-function App() {
+function RoutesControl() {
 
   return (
     <>
@@ -28,4 +28,4 @@ function App() {
   )
 }
 
-export default App
+export default RoutesControl
