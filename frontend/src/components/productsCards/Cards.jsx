@@ -3,13 +3,9 @@ import '../../components/productsCards/cards.css'
 import { useEffect, useState } from "react"
 
 function Cards() {
-
     const [produtosListados, setProdutosListados] = useState([])
-
     const [loading, setLoading] = useState(true)
-
     const [error, setError] = useState(false)
-
     const [produtoSelecionado, setProdutoSelecionado] = useState(null)
 
     useEffect(() => {
@@ -25,17 +21,13 @@ function Cards() {
             if (error) {
                 setError(true)
             }
-
             else {
                 setProdutosListados(produtos)
             }
-
             setLoading(false)
-
         }
         getProducts()
     }, [])
-
     if (error) {
         return (
             <div>
@@ -43,7 +35,6 @@ function Cards() {
             </div>
         )
     }
-
     if (loading) {
         return (
             <div className="spinner-border text-primary" role="status">
@@ -51,7 +42,6 @@ function Cards() {
             </div>
         )
     }
-
     if (produtoSelecionado) {
         return (
             <div>
@@ -62,7 +52,6 @@ function Cards() {
             </div>
         )
     }
-
     return (
         <>
             {produtosListados.map(produto => (

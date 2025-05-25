@@ -1,7 +1,34 @@
+import { useState } from 'react'
 import Navbar from '../../components/navbar/navbar'
 import '../signUp/signup.css'
+import supabase from '../../services/supaBaseClient'
 
 function SignUp() {
+
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
+
+  function criarNovaConta(e) {
+    e.preventDefault()
+    async function signUpNewUser() {
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: senha,
+        options: {
+          emailRedirectTo: 'http://localhost:3000/inicio',
+        },
+      })
+      
+      if (error) {
+        console.error('Erro ao fazer o cadastro', error.message)
+      }
+
+      else {
+        console.log('sucesso!', data)
+      }
+    }
+    signUpNewUser()
+  }
   return (
     <>
       <Navbar />
@@ -9,24 +36,27 @@ function SignUp() {
         <h1 className='text-white'>Nova Conta</h1>
         <form className="row g-1">
           <div className="col-md-6">
-            <label htmlFor="inputEmail4" className="form-label text-white">Nome</label>
-            <input type="email" className="form-control b" id="inputName" />
-          </div>
-          <div className="col-md-6">
             <label htmlFor="inputEmail4" className="form-label text-white">Email</label>
-            <input type="email" className="form-control b" id="inputEmail" />
+            <input type="email"
+              className="form-control b"
+              id="inputEmail"
+              value={email}
+              placeholder='Digite Seu Email'
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div className="col-md-6">
             <label htmlFor="inputPassword4" className="form-label text-white">Senha</label>
-            <input type="password" className="form-control b" id="inputPassword" />
+            <input type="password"
+              className="form-control b"
+              id="inputPassword"
+              value={senha}
+              placeholder='Digite Sua Senha'
+              onChange={(e) => setSenha(e.target.value)}
+            />
           </div>
-          <div className="col-12">
-            <label htmlFor="inputAddress" className="form-label text-white">Endereço</label>
-            <input type="text" className="form-control b" id="inputAddress" />
-          </div>
-
           <div className="d-flex mt-3 justify-content-center">
-            <button type="submit" className="btn btn-dark" id='signUpButton'>Criar Nova Conta</button>
+            <button className="btn btn-dark" id='signUpButton' onClick={criarNovaConta}>Criar Nova Conta</button>
           </div>
         </form>
         <h6 className='d-flex text-primary'>Já Tenho Uma Conta? Entrar</h6>
