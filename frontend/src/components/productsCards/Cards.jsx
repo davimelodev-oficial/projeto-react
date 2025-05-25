@@ -1,40 +1,83 @@
+import supabase from '../../services/supaBaseClient.js'
+import '../../components/productsCards/cards.css'
 import { useEffect, useState } from "react"
 
 function Cards() {
 
-    const [produtos, setProdutos] = useState([])
+    const [produtosListados, setProdutosListados] = useState([])
+
+    const [loading, setLoading] = useState(true)
+
+    const [error, setError] = useState(false)
 
     const [produtoSelecionado, setProdutoSelecionado] = useState(null)
 
     useEffect(() => {
-        fetch('https://fakestoreapi.com/products')
-         .then(res => res.json())
-         .then(data => setProdutos(data))
 
+        async function getProducts() {
+
+            setLoading(true)
+
+            let { data: produtos, error } = await supabase
+                .from('produtos')
+                .select('*')
+
+            if (error) {
+                setError(true)
+            }
+
+            else {
+                setProdutosListados(produtos)
+            }
+
+            setLoading(false)
+
+        }
+        getProducts()
     }, [])
 
-   if(produtoSelecionado) {
-    return (
-        <div>
-            <img src={produtoSelecionado.image} width={100} height={100} alt="" />
-            <h1>{produtoSelecionado.title}</h1>
-            <p>{produtoSelecionado.description}</p>
-            <button onClick={() => setProdutoSelecionado(null)}>Voltar</button>
-        </div>
-    )
-   }
+    if (error) {
+        return (
+            <div>
+                <h1>Erro ao buscar dados!</h1>
+            </div>
+        )
+    }
+
+    if (loading) {
+        return (
+            <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>
+        )
+    }
+
+    if (produtoSelecionado) {
+        return (
+            <div>
+                <h1>{produtoSelecionado.nome}</h1>
+                <p>{produtoSelecionado.descricao}</p>
+                <h2>{produtoSelecionado.preco}</h2>
+                <button onClick={() => setProdutoSelecionado(null)}>Voltar</button>
+            </div>
+        )
+    }
 
     return (
         <>
-            {produtos.slice(1,10).map(produto => (
+            {produtosListados.map(produto => (
                 <div key={produto.id}>
-                    <img src={produto.image} width={100} height={100} alt="" />
-                    <h1>{produto.title}</h1>
-                    <p>Descrição: {produto.description}</p>
-                    <p>Preço: {produto.price}</p>
-                    <button onClick={() => setProdutoSelecionado(produto)}>Visualizar Produto</button>
+                    <h1>{produto.nome}</h1>
+                    <p>{produto.descricao}</p>
+                    <h2>{produto.preco}</h2>
+                    <button onClick={() => setProdutoSelecionado(produto)}>Ver Produto</button>
                 </div>
-            ))}
+            ))
+            }
+            <br />
+            <br />
+            <br />
+            <br />
         </>
     )
 }
